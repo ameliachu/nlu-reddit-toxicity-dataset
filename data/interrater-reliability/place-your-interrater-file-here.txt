@@ -1,0 +1,3 @@
+Make a copy of your "Assessment" tab as a CSV and upload the document here.
+Please make the file name: interrater-{netid}-{YYYYMMDD}.csv
+Where YYYYMMDD is the current date.
