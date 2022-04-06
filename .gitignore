@@ -1,2 +1,3 @@
 # stuff to ignore
+.ipynb_checkpoints/*
 data/gme_master_data_1611233441_1618627983.csv
