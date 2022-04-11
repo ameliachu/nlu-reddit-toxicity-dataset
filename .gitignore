@@ -1,3 +1,5 @@
 # stuff to ignore
 .ipynb_checkpoints/*
 data/gme_master_data_1611233441_1618627983.csv
+data/daily_master_data_1614250838_1618692612.csv
+**/.DS_Store
