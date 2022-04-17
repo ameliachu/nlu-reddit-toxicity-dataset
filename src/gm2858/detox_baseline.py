@@ -5,8 +5,8 @@ import numpy as np
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 
 #Read in data
-data_path = 'path_to_data'
-results_path = 'path_to_store_results'
+data_path = '../../data/'
+results_path = '../../reporting/baseline_results'
 
 df = pd.read_csv(data_path+'labelled_master_data_2022-04-14.csv')
 
