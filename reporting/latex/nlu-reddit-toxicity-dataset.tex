@@ -1,0 +1,367 @@
+% This must be in the first 5 lines to tell arXiv to use pdfLaTeX, which is strongly recommended.
+\pdfoutput=1
+% In particular, the hyperref package requires pdfLaTeX in order to break URLs across lines.
+
+\documentclass[11pt]{article}
+
+% Remove the "review" option to generate the final version.
+\usepackage[review]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{booktabs}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+\setlength\titlebox{5cm}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{A Toxicity Detection Dataset with r/WallStreetBet Comments}
+
+% Author information can be set in various styles:
+% For several authors from the same institution:
+% \author{Author 1 \and ... \and Author n \\
+%         Address line \\ ... \\ Address line}
+% if the names do not fit well on one line use
+%         Author 1 \\ {\bf Author 2} \\ ... \\ {\bf Author n} \\
+% For authors from different institutions:
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \And  ... \And
+%         Author n \\ Address line \\ ... \\ Address line}
+% To start a separate ``row'' of authors use \AND, as in
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \AND
+%         Author 2 \\ Address line \\ ... \\ Address line \And
+%         Author 3 \\ Address line \\ ... \\ Address line}
+
+\author{Amelia Chu \and Yunseok Jang \and Graham Murphy \and Yoon Tae Park \\
+ New York University 60 5th Avenue, New York, NY \\
+  \texttt{{ameliachu, yj2369, gm2858, yp2201 }@nyu.edu} \\}
+
+\begin{document}
+\maketitle
+\author
+% \begin{abstract}
+% This document is a supplement to the general instructions for *ACL authors. It contains instructions for using the \LaTeX{} style files for ACL conferences.
+% The document itself conforms to its own specifications, and is therefore an example of what your manuscript should look like.
+% These instructions should be used both for papers submitted for review and for final versions of accepted papers.
+% \end{abstract}
+
+\section{Introduction \& Background}
+Toxicity is a common pain point in online forums. It is tasking on contributors and can lead to users disengaging from conversations, attrition, or even impact the safety of the community (Vidgen, 2021; Salminen, 2020). It is also tasking on moderators, who very often can become overwhelmed and fatigued from viewing toxic comments (Almerekhi, et al., 2020; Vidgen and Derczynski, 2020).  Therefore, to make social media platforms a more hospitable place, it is important to be able to detect and remove toxic comments for overall community wellbeing.  An example of a forum that suffers from this kind of toxicity is the subreddit WallStreetBets. Traditionally known and visited by few, r/WallStreetBets has recently made it into mainstream attention as a premier example of a toxic forum, drawing attention from mainstream media outlets (Harwell, 2021; Hadly, 2021; McCabe, 2021). 
+
+Although there are existing datasets which have text classified with toxicity or malevolent attributes, these attributes can be hard to define, or it may be difficult to obtain a consensus (Davidson, 2017; Salminen, 2018; Salminen, 2019). Likewise, interrater reliability can be low as was the case with the CAD dataset (Vidgen, 2021). In the GoEmotions dataset, although interrater reliability was high amongst positive emotions, items with negative emotion had larger disagreements (Demszky, 2020).  In other cases where interrater reliability is higher, such as in Zhang (2021) and Salminen (2020), more short-form text content was used (i.e. Twitter data). We believe there is an opportunity to introduce new data into the current toxic-sentiment classifier landscape to potentially expose shortcomings. Particularly, we hope to establish a dataset that is able to have a high interrater reliability, by ensuring our labelers have a common interpretation of the definitions for each of the toxic attribute labels in our dataset. To this end, we will be electing to not use crowdsourced labels. As found in Vidgen (2020), though crowdsourcing labels can be an efficient way to collect labeled data, it is difficult to ensure all crowdworkers have the same interpretation of a task. 
+
+We aim to provide a new benchmark dataset using comments from r/WallStreetBets and toxicity attribute labels that is not well classified by using current SOTA models, and thereby enriching publicly available datasets for testing toxicity.
+
+
+\section{Data}
+\subsection{Data Collection}
+To construct our dataset, we used pre-collected data from r/WallStreetBets. This pre-collected data contains 619, 646 comments from "Daily Discussion Thread"s from the end of January 2021 to April 2021. This time period coincides with when  r/WallStreetBets became popular and had a variety of moderating issues (McEnery, 2021). The daily discussion thread submissions were chosen because those threads were designed to attract all users, not just niche topics or community experts. Users are encouraged to interact and post quick questions there, thus these submissions attracted users of varying experience and commitment to the r/WallStreetBets community (cite community guidelines; article on what daily discussion is). The data pipeline used to collect this data used PRAW (Python Reddit API Wrapper) and used tokens provided by Reddit to ensure alignment with Reddit's Terms of Service. 
+
+
+From this pre-collected dataset, we randomly selected and assigned batches of 200 comments each of our 4 raters. As the dataset is overwhelmingly "non-toxic" (see Table X), this random batch assignment will continue until we have approximately 800 comments with at least 1 toxic attribute. We are choosing to label the data in batches so that the raters can periodically check-in, discuss any ambiguity, raise concerns and revise the codebook as needed (See Section 3.2.1 for further detail). Our completed dataset will have a distribution which skews toward "toxic" examples, as a differentiating feature of this dataset is the abundance of examples which may contain toxic attributes, but do not ultimately meet the definition of "toxicity" (as defined in Table X).
+
+\subsection{Data Taxonomy & Labeling Methodology}
+
+The pre-collected data was reshaped so each comment selected for labeling included context (i.e. the preceding and following comment). Then, each comment was labeled by human raters (i.e. the authors of this paper) for the presence of 5 toxic attributes: toxicity, severe toxicity, identity attack, insult, profanity, threat. For each attribute, raters will assign a value 1 if they believe the comment matches the definition of a toxic attribute, or assign 0, if they do not believe the comment matches the definition (See Table 1 for a full list of definitions). Raters were asked to use the definitions provided by Perspective (2022) and to evaluate each label independently. For example, even if a comment is determined to contain profanity, this does not mean it meets the definition of toxicity. Likewise, there appears to be low correlation between the toxic attributes (Figure 1). The highest correlation between attributes is between toxicity and insult (r=0.52). Each human labeller was instructed to consider the context if there was any uncertainty on whether a comment had a toxic attribute.
+
+\subsubsection{Interrater Reliability}
+Inter-rater reliability was evaluated through an initial assessment and will be routinely re-evaluated throughout the dataset generation period. 
+
+\subsubsubsection{Initial Assessment}
+The initial assessment generated by randomly sampling the pre-collected dataset, selecting examples that were likely to contain one or more toxic attributes, repeating the random sample process until 10 comments were selected. Before taking the assessment, raters, as a group, reviewed the toxic attribute definitions and practiced labeling those attributes on a separate set of 5 examples. Any ambiguity or clarifying questions raised would be discussed until a consensus is reached. When needed, a guideline would be recorded for the codebook.
+
+After the group exercise, the raters performed the interrater assessment independently. Interater reliability was assessed with Spearman's R. Overall, the raters achieved a reliability of 0.71, however there was low initial agreement on the toxicity label (r = 0.5) and so far none of the raters have identified a comment as meeting the criteria of the threat attribute.
+
+\subsubsubsection{Routine Evaluation Methodology}
+To ensure and re-enforce consistency, raters will receive randomly-selected batches of 200 comments for evaluation, at a time. When all raters complete a batch, for a total of 800 comments, they convene to discuss any examples while those examples are relatively top-of-mind. If there are any examples they found ambiguous, they are encouraged to discuss with the group, and if needed, the codebook guidelines would then be updated to reflect new or changed criteria. The raters are free to return to their assigned examples to revise any labels to reflect the latest updates to the codebook. 
+
+Additionally, this batch method enables us to routinely assess our interrater reliability. Aside from the initial batch, each subsequent batch of 200, contain 60 randomly selected examples that have been already rated by another rater. These 60 examples are evaluated for interrater reliability and serve as a checkpoint to potentially help determine if we need to revise any labeling guidelines.
+
+\subsubsection{Dataset Limitation & Disclosure}
+
+We are aware that the dataset has inherent limitations and biases as it contains only Reddit data which is historically known to skew toward young college-educated male users (Auxier, 2021). Additionally, the labelers are all New York University Data Science students. We also understand that these factors can introduce unintended biases.
+
+
+\section{Analysis & Results}
+Our baseline results used the first batch of 800 labeled comments. Due to the severe imbalance of the dataset, only 2.9\% of comments had at least one toxic attribute, we chose to use F-1 score, precision, and recall to analyze model performance instead of accuracy. These metrics provide a better measure of incorrectly classified cases and how well each model is able to distinguish between toxic and non-toxic. To assess performance, we chose the following current SOTA models: GPT-3, and versions of BERT and roBERTa that have been trained on toxicity datasets.
+\subsection{GPT-3 (DaVinci)}
+We selected GPT-3 DaVinci as it is widely used for recent toxic language detection as well as presented as the most versatile engine (Gehman et al., 2020; Zhou et al., 2021; Baheti et al., 2021).  For baseline results, we chose GPT-3 with 175 billion parameters (Brown et al., 2020), with zero-shot learning.
+\subsubsection{Baseline Results}
+Overall, zero-shot GPT-3 did not show good performance. This might happen as the GPT-3 is not well understanding the Reddit-style conversations. Thus, we conducted some other fine-tuning methods into the model and checked its results. 
+
+GPT-3 didn’t perform well in most of the labels we defined (F1 = 0.51, Precision =  0.40, Recall= 0.69). Especially for insult and profanity labels, GPT-3 had quite a lot of false-positive results.This resulted in overall low performance of GPT-3 baseline model. 
+
+\subsection{Detoxify BERT}
+We chose BERT because there has already been extensive work done to train toxic comment classifiers using BERT as a base, and thus would be useful in serving as a baseline for our experiments.  The selected BERT model was trained specifically for toxic comment classification with the same taxonomy and created by unitary.ai. We performed our experiment with zero-shot learning.
+
+\subsubsection{Baseline Results}
+Overall BERT performed quite poorly in detecting the presence of Toxicity, Severe Toxicity, and Identity Attacks attributes (there were no identified Threats in the dataset).  The only category BERT was able to capture well was Profanity(F1 = 0.81, Precision =  0.91, Recall= 0.73). It appears that based on the higher recall and low precision, combined with the Profanity scores, the BERT model often associated posts containing profanity with toxicity, which for this dataset is often not the case.
+
+\subsection{Detoxify RoBERTa}
+Similar to how BERT serves as a good baseline model for our task, RoBERTa has the advantage of providing an ‘unbiased’ baseline.  Sentiment and toxicity classifiers can be often be biased toward the inclusion of certain identities, i.e. the inclusion of ‘black’ or ‘gay’ in a comment will automatically result in a negative or toxic classification.  The RoBERTa-based toxicity classifier attempts to solve this by mitigating the impact of bias from the inclusion of certain identities in a comment.  As with the previous models, we also obtained our baseline RoBERTa results with zero-shot learning.
+
+\subsubsection{Baseline Results}
+Interestingly, apart from Identity Attacks, which the BERT model was unable to detect, The RoBERTa toxicity classifier performed similarly or slightly worse than its BERT counterpart.  Despite the similar performance, one could argue that its ability to detect identity threats makes it the stronger model between the two.
+
+\section{Collaboration Statement}
+All team members contributed roughly equally to the project. All members labeled the dataset. Amelia contributed to the literature review, manages data collection, the codebook, and runs the interrater reliability assessments. Yunseok contributed to constructing the evaluation with GPT-3 (specifically with few-shots, and fine-tuning); he also converted all materials to ACL format/LaTex. Graham constructed the pipeline for the detoxify models (BERT,  RoBERTa) and obtained results for the zero-shot setting. Yoon Tae wrote the code to obtain GPT-3 zero-shot results.
+\section{Engines}
+
+To produce a PDF file, pdf\LaTeX{} is strongly recommended (over original \LaTeX{} plus dvips+ps2pdf or dvipdf). Xe\LaTeX{} also produces PDF files, and is especially suitable for text in non-Latin scripts.
+
+\section{Preamble}
+
+The first line of the file must be
+\begin{quote}
+\begin{verbatim}
+\documentclass[11pt]{article}
+\end{verbatim}
+\end{quote}
+
+To load the style file in the review version:
+\begin{quote}
+\begin{verbatim}
+\usepackage[review]{acl}
+\end{verbatim}
+\end{quote}
+For the final version, omit the \verb|review| option:
+\begin{quote}
+\begin{verbatim}
+\usepackage{acl}
+\end{verbatim}
+\end{quote}
+
+To use Times Roman, put the following in the preamble:
+\begin{quote}
+\begin{verbatim}
+\usepackage{times}
+\end{verbatim}
+\end{quote}
+(Alternatives like txfonts or newtx are also acceptable.)
+
+Please see the \LaTeX{} source of this document for comments on other packages that may be useful.
+
+Set the title and author using \verb|\title| and \verb|\author|. Within the author list, format multiple authors using \verb|\and| and \verb|\And| and \verb|\AND|; please see the \LaTeX{} source for examples.
+
+By default, the box containing the title and author names is set to the minimum of 5 cm. If you need more space, include the following in the preamble:
+\begin{quote}
+\begin{verbatim}
+\setlength\titlebox{<dim>}
+\end{verbatim}
+\end{quote}
+where \verb|<dim>| is replaced with a length. Do not set this length smaller than 5 cm.
+
+\section{Document Body}
+
+\subsection{Footnotes}
+
+Footnotes are inserted with the \verb|\footnote| command.\footnote{This is a footnote.}
+
+\subsection{Tables and figures}
+
+See Table~\ref{tab:accents} for an example of a table and its caption.
+\textbf{Do not override the default caption sizes.}
+
+\begin{table}
+\centering
+\begin{tabular}{lc}
+\hline
+\textbf{Command} & \textbf{Output}\\
+\hline
+\verb|{\"a}| & {\"a} \\
+\verb|{\^e}| & {\^e} \\
+\verb|{\`i}| & {\`i} \\
+\verb|{\.I}| & {\.I} \\
+\verb|{\o}| & {\o} \\
+\verb|{\'u}| & {\'u}  \\
+\verb|{\aa}| & {\aa}  \\\hline
+\end{tabular}
+\begin{tabular}{lc}
+\hline
+\textbf{Command} & \textbf{Output}\\
+\hline
+\verb|{\c c}| & {\c c} \\
+\verb|{\u g}| & {\u g} \\
+\verb|{\l}| & {\l} \\
+\verb|{\~n}| & {\~n} \\
+\verb|{\H o}| & {\H o} \\
+\verb|{\v r}| & {\v r} \\
+\verb|{\ss}| & {\ss} \\
+\hline
+\end{tabular}
+\caption{Example commands for accented characters, to be used in, \emph{e.g.}, Bib\TeX{} entries.}
+\label{tab:accents}
+\end{table}
+
+\subsection{Hyperlinks}
+
+Users of older versions of \LaTeX{} may encounter the following error during compilation:
+\begin{quote}
+\tt\verb|\pdfendlink| ended up in different nesting level than \verb|\pdfstartlink|.
+\end{quote}
+This happens when pdf\LaTeX{} is used and a citation splits across a page boundary. The best way to fix this is to upgrade \LaTeX{} to 2018-12-01 or later.
+
+\subsection{Citations}
+
+\begin{table*}
+\centering
+\begin{tabular}{lll}
+\hline
+\textbf{Output} & \textbf{natbib command} & \textbf{Old ACL-style command}\\
+\hline
+\citep{andrew2007scalable} & \verb|\citep| & \verb|\cite| \\
+\citealp{Gusfield:97} & \verb|\citealp| & no equivalent \\
+\citet{Gusfield:97} & \verb|\citet| & \verb|\newcite| \\
+\citeyearpar{Gusfield:97} & \verb|\citeyearpar| & \verb|\shortcite| \\
+\hline
+\end{tabular}
+\caption{\label{citation-guide}
+Citation commands supported by the style file.
+The style is based on the natbib package and supports all natbib citation commands.
+It also supports commands defined in previous ACL style files for compatibility.
+}
+\end{table*}
+
+Table~\ref{citation-guide} shows the syntax supported by the style files.
+We encourage you to use the natbib styles.
+You can use the command \verb|\citet| (cite in text) to get ``author (year)'' citations, like this citation to a paper by \citet{Gusfield:97}.
+You can use the command \verb|\citep| (cite in parentheses) to get ``(author, year)'' citations \citep{Gusfield:97}.
+You can use the command \verb|\citealp| (alternative cite without parentheses) to get ``author, year'' citations, which is useful for using citations within parentheses (e.g. \citealp{Gusfield:97}).
+
+\subsection{References}
+
+\nocite{Ando2005,andrew2007scalable,rasooli-tetrault-2015}
+
+The \LaTeX{} and Bib\TeX{} style files provided roughly follow the American Psychological Association format.
+If your own bib file is named \texttt{custom.bib}, then placing the following before any appendices in your \LaTeX{} file will generate the references section for you:
+\begin{quote}
+\begin{verbatim}
+\bibliography{custom}
+\end{verbatim}
+\end{quote}
+
+You can obtain the complete ACL Anthology as a Bib\TeX{} file from \url{https://aclweb.org/anthology/anthology.bib.gz}.
+To include both the Anthology and your own .bib file, use the following instead of the above.
+\begin{quote}
+\begin{verbatim}
+\bibliography{anthology,custom}
+\end{verbatim}
+\end{quote}
+
+Please see Section~\ref{sec:bibtex} for information on preparing Bib\TeX{} files.
+
+\subsection{Appendices}
+
+Use \verb|\appendix| before any appendix section to switch the section numbering over to letters. See Appendix~\ref{sec:appendix} for an example.
+
+\section{Bib\TeX{} Files}
+\label{sec:bibtex}
+
+Unicode cannot be used in Bib\TeX{} entries, and some ways of typing special characters can disrupt Bib\TeX's alphabetization. The recommended way of typing special characters is shown in Table~\ref{tab:accents}.
+
+Please ensure that Bib\TeX{} records contain DOIs or URLs when possible, and for all the ACL materials that you reference.
+Use the \verb|doi| field for DOIs and the \verb|url| field for URLs.
+If a Bib\TeX{} entry has a URL or DOI field, the paper title in the references section will appear as a hyperlink to the paper, using the hyperref \LaTeX{} package.
+
+\section*{Acknowledgements}
+
+This document has been adapted
+by Steven Bethard, Ryan Cotterell and Rui Yan
+from the instructions for earlier ACL and NAACL proceedings, including those for
+ACL 2019 by Douwe Kiela and Ivan Vuli\'{c},
+NAACL 2019 by Stephanie Lukin and Alla Roskovskaya,
+ACL 2018 by Shay Cohen, Kevin Gimpel, and Wei Lu,
+NAACL 2018 by Margaret Mitchell and Stephanie Lukin,
+Bib\TeX{} suggestions for (NA)ACL 2017/2018 from Jason Eisner,
+ACL 2017 by Dan Gildea and Min-Yen Kan,
+NAACL 2017 by Margaret Mitchell,
+ACL 2012 by Maggie Li and Michael White,
+ACL 2010 by Jing-Shin Chang and Philipp Koehn,
+ACL 2008 by Johanna D. Moore, Simone Teufel, James Allan, and Sadaoki Furui,
+ACL 2005 by Hwee Tou Ng and Kemal Oflazer,
+ACL 2002 by Eugene Charniak and Dekang Lin,
+and earlier ACL and EACL formats written by several people, including
+John Chen, Henry S. Thompson and Donald Walker.
+Additional elements were taken from the formatting instructions of the \emph{International Joint Conference on Artificial Intelligence} and the \emph{Conference on Computer Vision and Pattern Recognition}.
+
+
+% Entries for the entire Anthology, followed by custom entries
+
+\bibliography{anthology,custom}
+
+
+
+
+\appendix
+
+\section{Example Appendix}
+\label{sec:appendix}
+
+This is an appendix.
+\begin{table*}
+\centering
+\begin{tabular}{ll}
+\hline
+Attribute       & Number of Examples \\ \hline
+Overall         & 800                \\ \hline
+Toxicity        & 23                 \\
+Severe Toxicity & 3                  \\
+Identity Attack & 9                  \\
+Insult          & 49                 \\
+by Profanity    & 113                \\
+Threat          & 0                  \\ \hline
+\end{tabular}
+\caption{\label{data-distribution}
+Distribution of Comments by Toxic Attribute  }
+\end{table*}
+\begin{table*}
+\centering
+\begin{tabular}{ll}
+\hline
+Attribute          & Reliability (Spearman R) \\ \hline
+Overall            & 0.71                     \\ \hline
+by Toxicity        & 0.50                     \\
+by Severe Toxicity & 0.93                     \\
+by Identity Attack & 0.80                     \\
+by Insult          & 0.85                     \\
+by Profanity       & 0.80                     \\
+by Threat          & N/A                      \\ \hline
+\end{tabular}
+\caption{\label{interrater-summary}
+Interrater Reliability (Spearman) - Overall \& by Toxic Attribute }
+\end{table*}
+
+% \begin{table}[]
+% \begin{tabular}{ll}
+% \hline
+% Attribute          & Reliability (Spearman R) \\ \hline
+% Overall            & 0.71                     \\ \hline
+% by Toxicity        & 0.50                     \\
+% by Severe Toxicity & 0.93                     \\
+% by Identity Attack & 0.80                     \\
+% by Insult          & 0.85                     \\
+% by Profanity       & 0.80                     \\
+% by Threat          & N/A                      \\ \hline
+% \end{tabular}
+% \end{table}
+
+
+\end{document}
