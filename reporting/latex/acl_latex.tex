@@ -24,6 +24,7 @@
 % but it will improve the layout of the manuscript,
 % and will typically save some space.
 \usepackage{microtype}
+\usepackage{booktabs}
 
 % If the title and author information does not fit in the area allocated, uncomment the following
 %
@@ -43,18 +44,28 @@
 % \author{Author 1 \\ Address line \\  ... \\ Address line
 %         \And  ... \And
 %         Author n \\ Address line \\ ... \\ Address line}
-% To start a seperate ``row'' of authors use \AND, as in
+% To start a separate ``row'' of authors use \AND, as in
 % \author{Author 1 \\ Address line \\  ... \\ Address line
 %         \AND
 %         Author 2 \\ Address line \\ ... \\ Address line \And
 %         Author 3 \\ Address line \\ ... \\ Address line}
 
-\author{First Author \\
+\author{Amelia Chu \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{ameliachu@nyu.edu} \\\And
+  Second Author \\
   Affiliation / Address line 1 \\
   Affiliation / Address line 2 \\
   Affiliation / Address line 3 \\
   \texttt{email@domain} \\\And
-  Second Author \\
+  Third Author \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{email@domain} \\\And
+  Fourth Author \\
   Affiliation / Address line 1 \\
   Affiliation / Address line 2 \\
   Affiliation / Address line 3 \\
@@ -182,7 +193,7 @@ This happens when pdf\LaTeX{} is used and a citation splits across a page bounda
 \hline
 \textbf{Output} & \textbf{natbib command} & \textbf{Old ACL-style command}\\
 \hline
-\citep{Gusfield:97} & \verb|\citep| & \verb|\cite| \\
+\citep{andrew2007scalable} & \verb|\citep| & \verb|\cite| \\
 \citealp{Gusfield:97} & \verb|\citealp| & no equivalent \\
 \citet{Gusfield:97} & \verb|\citet| & \verb|\newcite| \\
 \citeyearpar{Gusfield:97} & \verb|\citeyearpar| & \verb|\shortcite| \\
@@ -257,8 +268,20 @@ and earlier ACL and EACL formats written by several people, including
 John Chen, Henry S. Thompson and Donald Walker.
 Additional elements were taken from the formatting instructions of the \emph{International Joint Conference on Artificial Intelligence} and the \emph{Conference on Computer Vision and Pattern Recognition}.
 
+% @misc{Detoxify,
+%   title={Detoxify},
+%   author={Hanu, Laura and {Unitary team}},
+%   howpublished={Github. https://github.com/unitaryai/detoxify},
+%   year={2020}
+% }
+
+
 % Entries for the entire Anthology, followed by custom entries
+\bibliographystyle{apalike}
 \bibliography{anthology,custom}
+
+
+
 
 \appendix
 
