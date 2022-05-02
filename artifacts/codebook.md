@@ -2,9 +2,7 @@
 | ----------- | ----------- |
 | toxicity    | A rude, disrespectful, or unreasonable comment that is likely to make people leave a discussion.      |
 | severe_toxicity    | A very hateful, aggressive, disrespectful comment or otherwise very likely to make a user leave a discussion or give up on sharing their perspective. This attribute is much less sensitive to more mild forms of toxicity, such as comments that include positive uses of curse words.      |
-| identity_attack   | Negative or hateful comments targeting someone because of their identity*.
-
-Identity is any protected class (e.g. race, ethnicity, religion, sex (including pregnancy, sexual orientation, or gender identity), national origin, age (40 or older), disability and genetic information).       |
+| identity_attack   | Negative or hateful comments targeting someone because of their identity*.<br><br>Identity is any protected class (e.g. race, ethnicity, religion, sex (including pregnancy, sexual orientation, or gender identity), national origin, age (40 or older), disability and genetic information).     |
 | insult    | Insulting, inflammatory, or negative comment towards a person or a group of people.       |
 | profanity   |  Swear words, curse words, or other obscene or profane language.       |
 
