@@ -6,7 +6,7 @@
 | insult    | Insulting, inflammatory, or negative comment towards a person or a group of people.       |
 | profanity   |  Swear words, curse words, or other obscene or profane language.       |
 
-
+Definitions from [Perspective](https://developers.perspectiveapi.com/s/about-the-api-attributes-and-languages)
 
 ### Additional Guidelines
 
