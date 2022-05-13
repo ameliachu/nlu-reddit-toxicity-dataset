@@ -1,0 +1,8 @@
+Attribute,Reliability (Spearman R)
+Identity Attack,0.8126440701020722
+Insult,0.7955255512774523
+Profanity,0.9238311208903937
+Severe Toxicity,0.7802208826158102
+Threat,1.0
+Toxicity,0.7815931752083823
+Overall,0.8819123226559503

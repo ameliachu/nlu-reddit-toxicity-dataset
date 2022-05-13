@@ -1,0 +1,8 @@
+Attribute,Number of Examples
+Overall,800.0
+Toxicity,109.0
+Severe Toxicity,24.0
+Identity Attack,67.0
+Insult,130.0
+Profanity,405.0
+Threat,3.0
